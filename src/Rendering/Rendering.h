@@ -1,43 +1,44 @@
 #ifndef RENDERING_H
 #define RENDERING_H
-#include "Window/Window.h"
-#include "Shader.h"
+#include <Window.h>
+#include <Shader.h>
 
-/// # character_colection 
-///
-/// The character colection holds the char data like 
-/// a sprite or an image.
-typedef struct  {
-    char* colection;
-    int colection_size;
-    struct size{
-        int x;
-        int y;
+namespace Render {
+    /// # sprite 
+    ///
+    /// The sprite holds the char data like a image.
+    typedef struct  {
+        char* data;
+        int data_size;
+        struct bounds{
+            int x;
+            int y;
+        };
+        struct position {
+            int x;
+            int y;
+        };
+    }sprite;
+
+
+    enum rendering_mode{
+        WORLD_SPACE,
+        SCREEN_SPACE
     };
-    struct position {
-        int x;
-        int y;
-    };
-}character_colection;
 
-typedef struct {
-    window* W;
-    char* layers[5];
-} Renderer;
+    typedef struct {
+        window* W;
+        char* layers[5];
+        rendering_mode mode;
+    } Renderer;
 
-void render_add_to_buffer(char*);
-void render_swop_lair(int);
-/// # Clear Lair 
-/// 
-/// This clears the current working lair.
-void render_clear_lair();
-void render_clear_lairs();
-/// # Set Shader
-///
-/// Set Shader alows an object to have a *shader*.
-/// This could look like the object to be a different
-/// color or to have an effect.
-void render_set_shader(shader*);
+    
+    void add_to_buffer(Renderer*, char*);
+    void swop_layer(Renderer*, int);
+    void clear_layer(Renderer*, int);
+    void clear_layers(Renderer*);
+    void set_shader(Renderer*, shader*);
+}
 
 
 #endif
