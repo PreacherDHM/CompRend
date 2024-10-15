@@ -18,8 +18,9 @@
     struct window {
         window_size size = {0,0};
         window_state state = { RESIZEABLE };
-        window_input_mode input_state = { RAW };
+        window_input_mode input_mode = { RAW };
         const char* name = "";
+        char* buffer;
     };
 
     void set_window_size(window*, int, int);
@@ -31,5 +32,8 @@
     window_size get_window_size(window*);
     window_input_mode get_window_input_mode(window*);
     window_state get_window_state(window*);
-    char* get_window_input(window*);
+    const char* get_window_input(window*);
+
+    void window_draw(window*);
+    void window_clear_buffer(window*);
 #endif

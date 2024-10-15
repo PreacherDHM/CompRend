@@ -1,6 +1,6 @@
 set (TEST_CPP "main.cpp"
-    "LuaFunctions/Window.h"
-    "LuaFunctions/Window.cpp"
+    "Window/Window.h"
+    "Window/Window.cpp"
 )
 
 
