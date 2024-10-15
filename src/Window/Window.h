@@ -1,39 +1,38 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
-    enum window_state {
-        RESIZEABLE,
-        NONRESIZEABLE
-    };
-    enum window_input_mode {
-        RAW,
-        SUBMITION
-    };
+enum window_state { RESIZEABLE, NONRESIZEABLE };
 
-    typedef struct {
-        int X;
-        int Y;
-    } window_size;
+enum window_input_mode { RAW, SUBMITION };
 
-    struct window {
-        window_size size = {0,0};
-        window_state state = { RESIZEABLE };
-        window_input_mode input_mode = { RAW };
-        const char* name = "";
-        char* buffer;
-    };
+/// # window size
+///
+/// this struct holds the window size in chars
+/// horizontaly and verticly
+typedef struct {
+  int X;
+  int Y;
+} window_size;
 
-    void set_window_size(window*, int, int);
-    void set_window_state(window*, window_state);
-    void set_window_input_mode(window*, window_input_mode);
-    void set_window_name(window*, const char*);
-    void set_window_buffer(window*, char*);
+struct window {
+  window_size size = {0, 0};
+  window_state state = {RESIZEABLE};
+  window_input_mode input_mode = {RAW};
+  const char *name = "";
+  char *buffer;
+};
 
-    window_size get_window_size(window*);
-    window_input_mode get_window_input_mode(window*);
-    window_state get_window_state(window*);
-    const char* get_window_input(window*);
+void set_window_size(window *, int, int);
+void set_window_state(window *, window_state);
+void set_window_input_mode(window *, window_input_mode);
+void set_window_name(window *, const char *);
+void set_window_buffer(window *, char *);
 
-    void window_draw(window*);
-    void window_clear_buffer(window*);
+window_size get_window_size(window *);
+window_input_mode get_window_input_mode(window *);
+window_state get_window_state(window *);
+const char *get_window_input(window *);
+
+void window_draw(window *);
+void window_clear_buffer(window *);
 #endif
