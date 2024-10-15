@@ -1,4 +1,6 @@
 # Compiled Object files
+.cache/
+
 **/.DS_Store
 *.slo
 *.lo
