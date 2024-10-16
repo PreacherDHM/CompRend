@@ -13,7 +13,7 @@ int main() {
     while(true) {
         update_window_events(&W);
         window_draw(&W);
-//        std::this_thread::sleep_for(std::chrono::seconds(1));
+        //std::this_thread::sleep_for(std::chrono::seconds(1));
     }
     lua_State* L = luaL_newstate();
     luaL_dostring(L, "x = 47");
