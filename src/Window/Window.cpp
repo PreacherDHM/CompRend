@@ -1,9 +1,10 @@
 #include "Window.h"
-#ifdef _WIN32
+
+#include <stdio.h>
+#include <thread>
 #include "windows.h"
 #include <conio.h>
-#include <iostream>
-#include <stdio.h>
+#include <winuser.h>
 
 HANDLE outHandle;
 HANDLE inHandle;
@@ -28,17 +29,29 @@ window_state get_window_state(window *W) { return W->state; }
 const char *get_window_input(window *W) { return W->name; }
 
 void window_draw(window *W) {
-  DWORD nNumberOfCharsToRead = 127;
-  DWORD nRead, nWritten;
-  char lpBuffer[128];
   WriteFile(outHandle, W->buffer, W->buffer_size, NULL, NULL);
-  ReadConsole(inHandle,lpBuffer,nNumberOfCharsToRead,&nRead,NULL);
-  printf("size of window %d,%d c = %s\n", W->size.X, W->size.Y, lpBuffer);
 
-  //SetConsoleCursorPosition(outHandle, {0, 0});
+  SetConsoleCursorPosition(outHandle, {0, 0});
 }
+
 void window_clear_buffer(window *W) {
   // W->buffer[0] = '\0';
+}
+
+static bool did_work = false;
+std::thread worker;
+void DoWork(int ch) {
+
+
+      did_work = true;
+
+      printf("\nread = %c", ch);
+  SetConsoleCursorPosition(outHandle, {0, 0});
+}
+void input_event_start(bool is_closed) {
+}
+
+void window_close() {
 }
 
 void window_init(window *W) {
@@ -49,14 +62,27 @@ void window_init(window *W) {
   dwMode = ENABLE_PROCESSED_INPUT;
   SetConsoleMode(inHandle, dwMode);
   update_window_events(W);
+
+  CONSOLE_CURSOR_INFO lpCursor;
+  lpCursor.bVisible = false;
+  lpCursor.dwSize = 10;
+  SetConsoleCursorInfo(outHandle, &lpCursor);
 }
 
 void update_window_events(window *W) {
   CONSOLE_SCREEN_BUFFER_INFO cbiInfo;
+
+  if(_kbhit()) {
+      DoWork(_getch());
+  }
+
   GetConsoleScreenBufferInfo(outHandle, &cbiInfo);
+  SetConsoleTitleA("testin");
+
 
   if (W->size.X != cbiInfo.dwSize.X || W->size.Y != cbiInfo.dwSize.Y) {
     set_window_size(W, (int)cbiInfo.dwSize.X, (int)cbiInfo.dwSize.Y);
   }
+
+  printf("size of window %d,%d", W->size.X, W->size.Y);
 }
-#endif

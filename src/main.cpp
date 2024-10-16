@@ -1,7 +1,11 @@
 #include <cstdio>
-#include "Window.h"
+#include "Window/Window.h"
 #include "lua.hpp"
 #include <Rendering.h>
+#include <chrono>
+#include <iostream>
+#include <thread>
+
 int main() {
     Render::Renderer R = {};
     window W = {};
@@ -9,6 +13,7 @@ int main() {
     while(true) {
         update_window_events(&W);
         window_draw(&W);
+//        std::this_thread::sleep_for(std::chrono::seconds(1));
     }
     lua_State* L = luaL_newstate();
     luaL_dostring(L, "x = 47");
