@@ -1,2 +1,2 @@
 :run
-EX=.\build\src\TestLua.exe
+EX=.\build\src\LuaTest.exe

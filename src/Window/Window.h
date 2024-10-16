@@ -14,13 +14,22 @@ typedef struct {
   int Y;
 } window_size;
 
+typedef struct {
+    char message[128];
+    void* object;
+}Event;
+
 struct window {
   window_size size = {0, 0};
   window_state state = {RESIZEABLE};
   window_input_mode input_mode = {RAW};
   const char *name = "";
-  char *buffer;
+  const char *buffer = "testing on the test\n thest\n";
+  int buffer_size;
 };
+
+void window_init(window*);
+void update_window_events(window*);
 
 void set_window_size(window *, int, int);
 void set_window_state(window *, window_state);

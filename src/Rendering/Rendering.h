@@ -30,14 +30,17 @@ namespace Render {
         window* W;
         char* layers[5];
         rendering_mode mode;
+        const char renderBuffer[1024* 12];
     } Renderer;
 
     
-    void add_to_buffer(Renderer*, char*);
+    void set_rendering_mode(Renderer, rendering_mode mode);
+    void add_to_buffer(Renderer*, sprite);
     void swop_layer(Renderer*, int);
     void clear_layer(Renderer*, int);
     void clear_layers(Renderer*);
     void set_shader(Renderer*, shader*);
+    void build_shader(Renderer*);
 }
 
 
