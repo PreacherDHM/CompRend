@@ -19,8 +19,18 @@ void Render::add_to_buffer(Renderer *R, sprite sprite) {
 }
 
 void Render::render_buffer(Renderer *R) {
+    if(R->W->resize_event) {
+        delete R->render_buffer;
+        R->render_buffer = new char[R->W->size.X * R->W->size.Y];
+        R->render_buffer_size = R->W->size.X * R->W->size.Y;
+        R->W->resize_event = false;
+    }
+
     for(int i = 0; i < R->render_buffer_size; i++) {
-        R->render_buffer[i] = '\'';
+        R->render_buffer[i] = '\0';
+    }
+    for(int i = 0; i < R->W->size.X * R->W->size.Y; i++) {
+        R->render_buffer[i] = '-';
     }
           //R->render_buffer[0] = '#';
     for (int i = 0; i < R->sprite_count; i++) {
@@ -35,15 +45,15 @@ void Render::render_buffer(Renderer *R) {
           for (int x = 0; x < s.bounds.x; x++) {
             render_index = y * s.bounds.x + x;
             // sprite
-            if ((s.position.x - (s.bounds.x / 2) + x + R->W->size.X / 2 <
+            if ((s.position.x - (s.bounds.x / 2) + x + (R->W->size.X / 2) <
                      R->W->size.X &&
-                 s.position.y - (s.bounds.y / 2) + y + R->W->size.Y / 2 <
+                 s.position.y - (s.bounds.y / 2) + y + (R->W->size.Y / 2) <
                      R->W->size.Y) &&
                 (s.position.x - (s.bounds.x / 2) + x + (R->W->size.X / 2) >= 0 &&
                  s.position.y - (s.bounds.y / 2) + y + (R->W->size.Y / 2) >= 0)) {
 
               int buffer_index =
-                  (((R->W->size.Y * R->W->size.X) / 2) +
+                  (((R->W->size.Y / 2 * R->W->size.X) ) +
                    ((s.position.y - (s.bounds.y / 2) + y) * R->W->size.X)) +
                   ((R->W->size.X / 2) + (s.position.x - (s.bounds.x / 2) + x));
               R->render_buffer[buffer_index] = s.data[render_index];

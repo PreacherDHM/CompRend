@@ -26,6 +26,7 @@ struct window {
   const char *name = "";
   const char *buffer = "testing on the test\n thest\n";
   int buffer_size;
+  bool resize_event;
 };
 
 void window_init(window*);
@@ -41,6 +42,8 @@ window_size get_window_size(window *);
 window_input_mode get_window_input_mode(window *);
 window_state get_window_state(window *);
 const char *get_window_input(window *);
+
+bool get_window_resize_event(window *);
 
 void window_draw(window *);
 void window_clear_buffer(window *);
