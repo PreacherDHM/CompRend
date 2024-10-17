@@ -12,57 +12,45 @@ int main() {
   Render::Renderer R = {.W = &W};
   R.render_buffer = new char[W.size.X * W.size.Y];
   R.render_buffer_size = W.size.X * W.size.Y;
-  delete[] R.render_buffer;
 
   Render::init_renderer(&R); // initing renderer
 
   Render::sprite sp;
-  sp.bounds = {5, 4};
-  sp.data = " | |  / \\   |  |_0_|";
+  sp.bounds = {1, 1};
+  sp.data = "#";
   sp.data_size = 9;
   sp.position = {0, 0};
 
-  Render::add_to_buffer(&R, sp); // adding sprite to be rendered;
 
-  sp.position = {-5,-5};
-
-  Render::sprite sp2;  
-  sp2.bounds = {5, 4};
-  sp2.position = {4,20};
-  sp2.data = " | |  / \\   |  |_0_|" ;
-
-  Render::add_to_buffer(&R, sp); // adding sprite to be rendered;
-  sp.position = {-10,-10};
-  Render::add_to_buffer(&R, sp); // adding sprite to be rendered;
-  sp.position = {-15,-15};
-  Render::add_to_buffer(&R, sp); // adding sprite to be rendered;
-  sp.position = {-20,-20};
-  Render::add_to_buffer(&R, sp); // adding sprite to be rendered;
-  sp.position = {-10,0};
-  Render::add_to_buffer(&R, sp); // adding sprite to be rendered;
-  sp.position = {20,0};
-  Render::add_to_buffer(&R, sp); // adding sprite to be rendered;
-  sp.position = {15,0};
-  Render::add_to_buffer(&R, sp); // adding sprite to be rendered;
-
-
+  set_window_buffer(&W, R.render_buffer, R.render_buffer_size);
+    int y = 0;
+    bool swop;
   while (true) {
-      R.render_buffer = new char[W.size.X * W.size.Y];
-      R.render_buffer_size = W.size.X * W.size.Y;
+
+      if((y == 50 && swop)){
+          swop = false;
+      }
+      if(y == -40) {
+          swop = true;
+      }
+      if(swop) {
+          
+        y++;
+      }else {
+        y--;
+      }
+  sp.position = {0 + y, 0 };
+    Render::add_to_buffer(&R, sp); // adding sprite to be rendered;
+  sp.position = {-5 + y, 5 };
+    Render::add_to_buffer(&R, sp); // adding sprite to be rendered;
+  sp.position = {-10 + y, 10 };
+    Render::add_to_buffer(&R, sp); // adding sprite to be rendered;
+  sp.position = {-20 + y, -10 +y};
+    Render::add_to_buffer(&R, sp); // adding sprite to be rendered;
     Render::render_buffer(&R);
-    update_window_events(&W);
-    set_window_buffer(&W, R.render_buffer, R.render_buffer_size);
+    Render::clear_layer(&R,0);
     window_draw(&W);
-    //printf("\n%d,%d", W.size.X, W.size.Y);
-    //printf("\n%d, %d", W.size.X, W.size.Y);
+    update_window_events(&W);
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
-      delete[] R.render_buffer;
   }
-  lua_State *L = luaL_newstate();
-  luaL_dostring(L, "x = 47");
-  lua_getglobal(L, "x");
-  lua_Number x = lua_tonumber(L, 1);
-  printf("hi %d", (int)x);
-  lua_close(L);
-  return 0;
 }
