@@ -78,6 +78,7 @@ void window_init(window *W) {
 void update_window_events(window *W) {
 
   CONSOLE_SCREEN_BUFFER_INFO cbiInfo;
+  GetConsoleScreenBufferInfo(outHandle, &cbiInfo);
 
 
   if (W->size.X != cbiInfo.dwSize.X || W->size.Y != cbiInfo.dwSize.Y) {

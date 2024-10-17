@@ -10,34 +10,53 @@ int main() {
   window W = {};
   window_init(&W);
   Render::Renderer R = {.W = &W};
-  R.render_buffer = new char[300 * 200];
-  R.render_buffer_size = 300 * 200;
+  R.render_buffer = new char[W.size.X * W.size.Y];
+  R.render_buffer_size = W.size.X * W.size.Y;
+  delete[] R.render_buffer;
 
-  for (int i = 0; i < R.render_buffer_size; i++) {
-      R.render_buffer[i] = ' ';
-  }
-  for (int i = 80; i < 100; i++) {
-      R.render_buffer[i] = '#';
-  }
-  if(W.size.X * W.size.Y < R.render_buffer_size) {
-      R.render_buffer[W.size.X * W.size.Y] = '\0';
-  }
+  Render::init_renderer(&R); // initing renderer
 
   Render::sprite sp;
-  sp.bounds = {3, 3};
-  sp.data = "#########";
+  sp.bounds = {5, 4};
+  sp.data = " | |  / \\   |  |_0_|";
   sp.data_size = 9;
   sp.position = {0, 0};
 
-  Render::init_renderer(&R); // initing renderer
-  //Render::add_to_buffer(&R, sp); // adding sprite to be rendered;
+  Render::add_to_buffer(&R, sp); // adding sprite to be rendered;
+
+  sp.position = {-5,-5};
+
+  Render::sprite sp2;  
+  sp2.bounds = {5, 4};
+  sp2.position = {4,20};
+  sp2.data = " | |  / \\   |  |_0_|" ;
+
+  Render::add_to_buffer(&R, sp); // adding sprite to be rendered;
+  sp.position = {-10,-10};
+  Render::add_to_buffer(&R, sp); // adding sprite to be rendered;
+  sp.position = {-15,-15};
+  Render::add_to_buffer(&R, sp); // adding sprite to be rendered;
+  sp.position = {-20,-20};
+  Render::add_to_buffer(&R, sp); // adding sprite to be rendered;
+  sp.position = {-10,0};
+  Render::add_to_buffer(&R, sp); // adding sprite to be rendered;
+  sp.position = {20,0};
+  Render::add_to_buffer(&R, sp); // adding sprite to be rendered;
+  sp.position = {15,0};
+  Render::add_to_buffer(&R, sp); // adding sprite to be rendered;
+
+
   while (true) {
-    //Render::render_buffer(&R);
+      R.render_buffer = new char[W.size.X * W.size.Y];
+      R.render_buffer_size = W.size.X * W.size.Y;
+    Render::render_buffer(&R);
+    update_window_events(&W);
     set_window_buffer(&W, R.render_buffer, R.render_buffer_size);
     window_draw(&W);
-    update_window_events(&W);
+    //printf("\n%d,%d", W.size.X, W.size.Y);
     //printf("\n%d, %d", W.size.X, W.size.Y);
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
+      delete[] R.render_buffer;
   }
   lua_State *L = luaL_newstate();
   luaL_dostring(L, "x = 47");
