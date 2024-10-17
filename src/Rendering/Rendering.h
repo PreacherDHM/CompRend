@@ -2,14 +2,11 @@
 #define RENDERING_H
 #include <Window.h>
 #include <Shader.h>
+#ifndef MAX_SPRITE_COUNT
+#define MAX_SPRITE_COUNT 25
+#endif
 
 namespace Render {
-    /// # sprite 
-    ///
-    /// The sprite holds the char data like a image.
-    typedef struct  {
-        char* data;
-        int data_size;
         struct bounds{
             int x;
             int y;
@@ -18,6 +15,14 @@ namespace Render {
             int x;
             int y;
         };
+    /// # sprite 
+    ///
+    /// The sprite holds the char data like a image.
+    typedef struct  {
+        const char* data;
+        int data_size;
+        bounds bounds;
+        position position;
     }sprite;
 
 
@@ -28,14 +33,23 @@ namespace Render {
 
     typedef struct {
         window* W;
-        char* layers[5];
+        char* layers[300 * 200];
         rendering_mode mode;
-        const char renderBuffer[1024* 12];
+        char* render_buffer;
+        sprite sprites[MAX_SPRITE_COUNT];
+        int render_buffer_size;
+        int sprite_count;
+        int current_layer;
     } Renderer;
 
     
-    void set_rendering_mode(Renderer, rendering_mode mode);
+    /// # Set Rendering Mode
+    ///
+    /// This will set the rendering mode of the renderer. *IE world and ui modes.*
+    void init_renderer(Renderer*);
+    void set_rendering_mode(Renderer*, rendering_mode mode);
     void add_to_buffer(Renderer*, sprite);
+    void render_buffer(Renderer*);
     void swop_layer(Renderer*, int);
     void clear_layer(Renderer*, int);
     void clear_layers(Renderer*);

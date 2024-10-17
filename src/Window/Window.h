@@ -35,7 +35,7 @@ void set_window_size(window *, int, int);
 void set_window_state(window *, window_state);
 void set_window_input_mode(window *, window_input_mode);
 void set_window_name(window *, const char *);
-void set_window_buffer(window *, char *);
+void set_window_buffer(window *, char*, int);
 
 window_size get_window_size(window *);
 window_input_mode get_window_input_mode(window *);
