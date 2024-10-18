@@ -27,8 +27,8 @@ int lua_create_sprite(lua_State* L) {
 int lua_create_entity(lua_State* L) {
     Render::sprite* sprite = (Render::sprite*)lua_touserdata(L, -3);
     entity* ent = (entity*)lua_newuserdata(L,sizeof(entity));
-    ent->x = 0;
-    ent->y = 0;
+    ent->x = 0.0f;
+    ent->y = 0.0f;
     ent->sprite = *sprite;
     return 1;
 }
@@ -47,9 +47,14 @@ void init_lua(lua_State* L, Render::Renderer& R) {
     // there update functions and init functions must
     // always be run.
 
-
     lua_pushcfunction(L, lua_add_sprite);
     lua_setglobal(L, "add_sprite");
     lua_pushcfunction(L, lua_set_camera_pos);
     lua_setglobal(L, "camera_pos");
+    lua_pushcfunction(L, lua_create_sprite);
+    lua_setglobal(L, "create_sprite");
+    lua_pushcfunction(L, lua_create_entity);
+    lua_setglobal(L, "create_sprite");
+    lua_pushcfunction(L, lua_move_entity);
+    lua_setglobal(L, "move_entity");
 }
