@@ -40,6 +40,7 @@ namespace Render {
         int render_buffer_size;
         int sprite_count;
         int current_layer;
+        position position;
     } Renderer;
 
     
@@ -55,6 +56,8 @@ namespace Render {
     void clear_layers(Renderer*);
     void set_shader(Renderer*, shader*);
     void build_shader(Renderer*);
+
+    void set_rendering_position(Renderer*, int, int);
 }
 
 

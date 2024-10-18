@@ -3,8 +3,10 @@ set (TEST_CPP "main.cpp"
     "Window/Window.cpp"
     "Rendering/Rendering.h"
     "Rendering/Rendering.cpp"
-    "Rendering/Lua_Rendering.h"
-    "Rendering/Lua_Rendering.cpp"
+    "Rendering/Lua_Wrapers.h"
+    "Rendering/Lua_Wrapers.cpp"
+    "Rendering/Entity.h"
+    "Rendering/Entity.cpp"
 )
 
 
