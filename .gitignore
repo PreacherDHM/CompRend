@@ -52,7 +52,7 @@ include/divisible/*
 build/**/*
 
 include/*
-lib/*
-bin/*
+lib/
+bin/
 test/test_runner
 runner.run

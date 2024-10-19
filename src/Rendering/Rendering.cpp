@@ -11,7 +11,7 @@ void Render::set_rendering_mode(Render::Renderer *R,
   R->mode = mode;
 }
 
-void Render::add_to_buffer(Renderer *R, sprite sprite) {
+void Render::add_to_buffer(Renderer *R, sprite* sprite) {
   if (R->sprite_count < MAX_SPRITE_COUNT) {
     R->sprites[R->sprite_count] = sprite;
     R->sprite_count++;
@@ -34,37 +34,37 @@ void Render::render_buffer(Renderer *R) {
   }
   // R->render_buffer[0] = '#';
   for (int i = 0; i < R->sprite_count; i++) {
-    sprite s = R->sprites[i];
-    if ((s.position.y - (s.bounds.y / 2) + R->W->size.Y / 2 > 0 ||
-         s.position.x - (s.bounds.x / 2) + R->W->size.X / 2 > 0) ||
-        (s.position.y + (s.bounds.y / 2) + R->W->size.Y / 2 > R->W->size.Y ||
-         s.position.x + (s.bounds.x / 2) + R->W->size.X / 2 > R->W->size.X)) {
+    sprite* s = R->sprites[i];
+    if ((s->position.y - (s->bounds.y / 2) + R->W->size.Y / 2 > 0 ||
+         s->position.x - (s->bounds.x / 2) + R->W->size.X / 2 > 0) ||
+        (s->position.y + (s->bounds.y / 2) + R->W->size.Y / 2 > R->W->size.Y ||
+         s->position.x + (s->bounds.x / 2) + R->W->size.X / 2 > R->W->size.X)) {
       // adding sprite to buffer.
       int render_index = 0;
-      for (int y = 0; y < s.bounds.y; y++) {
-        for (int x = 0; x < s.bounds.x; x++) {
-          render_index = y * s.bounds.x + x;
+      for (int y = 0; y < s->bounds.y; y++) {
+        for (int x = 0; x < s->bounds.x; x++) {
+          render_index = y * s->bounds.x + x;
           // sprite
-          if ((R->position.x - s.position.x - (s.bounds.x / 2) + x +
+          if ((R->position.x - s->position.x - (s->bounds.x / 2) + x +
                        (R->W->size.X / 2) <
                    R->W->size.X &&
-               R->position.y - s.position.y - (s.bounds.y / 2) + y +
+               R->position.y - s->position.y - (s->bounds.y / 2) + y +
                        (R->W->size.Y / 2) <
                    R->W->size.Y) &&
-              (R->position.x - s.position.x - (s.bounds.x / 2) + x +
+              (R->position.x - s->position.x - (s->bounds.x / 2) + x +
                        (R->W->size.X / 2) >=
                    0 &&
-               R->position.y - s.position.y - (s.bounds.y / 2) + y +
+               R->position.y - s->position.y - (s->bounds.y / 2) + y +
                        (R->W->size.Y / 2) >=
                    0)) {
 
             int buffer_index =
                 (((R->W->size.Y / 2 * R->W->size.X)) +
-                 ((R->position.y - s.position.y - (s.bounds.y / 2) + y) *
+                 ((R->position.y - s->position.y - (s->bounds.y / 2) + y) *
                   R->W->size.X)) +
                 ((R->W->size.X / 2) +
-                 (R->position.x - s.position.x - (s.bounds.x / 2) + x));
-            R->render_buffer[buffer_index] = s.data[render_index];
+                 (R->position.x - s->position.x - (s->bounds.x / 2) + x));
+            R->render_buffer[buffer_index] = s->data[render_index];
           }
         }
       }

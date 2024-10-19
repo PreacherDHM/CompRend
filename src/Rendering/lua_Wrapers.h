@@ -3,12 +3,11 @@
 
 #include <lua.hpp>
 #include "Rendering.h"
-#include "Entity.h"
 
 /// # Init Lua Renderer 
 ///
 /// This will init the lua functions for the engine.
-void init_lua_renderer(lua_State*, Render::Renderer& R);
+void init_lua(lua_State*, Render::Renderer& R);
 
 
 // sprite
