@@ -30,7 +30,7 @@ in the render buffer.* CompRend will handle the rest for you. The main thing to
 remember is just add the entity to the scene
 
 #### Scene Functions
-| Function | description |
+| Function |    description         |
 |:--------:|:-----------:|
 | add_to_scene(entity) | This will add a entity to the desired scene. |
 | Update() | This will run on every frame. |

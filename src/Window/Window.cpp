@@ -1,5 +1,6 @@
 #include "Window.h"
 
+#ifdef _WIN32
 #include "windows.h"
 #include <conio.h>
 #include <stdio.h>
@@ -165,3 +166,4 @@ void update_window_events(window *W) {
       
   }
 }
+#endif

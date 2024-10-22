@@ -1,27 +1,17 @@
+#include "Entity.h"
 #include "Window/Window.h"
 #include "lua.hpp"
 #include <Rendering.h>
-#include <windows.h>
-#include "Entity.h"
+#include <fstream>
 
-const char* LUA_SCRIPT = R"(
-
-local pos 
-init = function ()
-    pos = get_entity_position()
-end
-update = function()
-
-position = get_entity_position() -- table {x,y}
-if pos.x < 10 then
-pos = x + 0.1
-end
-
-entity_move(position)
-end
-)";
+char *LUA_SCRIPT;
 
 int main() {
+
+    std::ifstream lua_file;
+    lua_file.open("init.lua");
+    lua_file >> LUA_SCRIPT;
+
   window W = {};
   window_init(&W); // init window
 
@@ -38,13 +28,13 @@ int main() {
   set_entity_position(&e, 0.0f, 0.0f);
   set_entity_sprite(&e, sp);
   set_entity_id(&e, 1);
-  set_entity_lua_script(&e);
+  set_entity_lua_script(&e, LUA_SCRIPT);
 
   float y, x = 0.0f;
   while (true) {
     update_window_events(&W);
 
-    for (int i = 0; i < strlen(get_window_input(&W)); i++) {
+    for (int i = 0; i < 5; i++) {
       if (get_window_input(&W)[i] == 'w') {
         y += 0.1f;
       }
@@ -59,10 +49,10 @@ int main() {
       }
     }
 
-    R.position = {0,  0};
+    R.position = {0, 0};
     set_entity_position(&e, x, y);
     Render::add_to_buffer(&R, &e.sprite);
-    //Render::add_to_buffer(&R, sp);
+    // Render::add_to_buffer(&R, sp);
     set_window_buffer(&W, R.render_buffer, R.render_buffer_size);
     Render::render_buffer(&R);
     Render::clear_layer(&R, 0);
