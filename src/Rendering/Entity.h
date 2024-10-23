@@ -20,7 +20,7 @@ typedef struct {
 // SETTERS
 void set_entity_sprite(entity*, sprite sprite);
 void set_entity_position(entity*, float, float );
-void set_entity_lua_script(entity*, const char*);
+void set_entity_lua_script(entity*, char*);
 void set_entity_id(entity*, int);
 
 //GETTERS
@@ -49,13 +49,6 @@ sprite get_entity_sprite(entity*);
 
 // LUA_SETTERS
 
-/// # Entity Create 
-/// 
-/// This creates a entity userdata (*c pointer*)
-/// and inits the data for the userdata.
-/// 
-/// **Returns 1**
-void entity_create(entity*,lua_State*);
 /// # Entity Move (LUA)
 ///
 /// This will move the entity to a cordnet.
@@ -101,4 +94,8 @@ void entity_init_lua(entity*,lua_State* );
 ///
 /// This will run the update function for the entity.
 void entity_run_lua(entity*, lua_State*);
+/// # Entity Create 
+/// 
+/// This will create a new entity
+int entity_create(lua_State *);
 #endif

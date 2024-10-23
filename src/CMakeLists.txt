@@ -7,6 +7,8 @@ set (TEST_CPP "main.cpp"
     "Rendering/Lua_Wrapers.cpp"
     "Rendering/Entity.h"
     "Rendering/Entity.cpp"
+    "Rendering/Scene.h"
+    "Rendering/Scene.cpp"
 )
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
