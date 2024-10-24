@@ -1,8 +1,11 @@
 #include "Entity.h"
+#include "Scene.h"
 #include "Window/Window.h"
 #include "lstate.h"
+#include "lua.h"
 #include "lua.hpp"
 #include <Rendering.h>
+#include <filesystem>
 #include <fstream>
 
 char *LUA_SCRIPT;
@@ -15,10 +18,12 @@ int main() {
 
   Render::Renderer R = {.W = &W};
   Render::init_renderer(&R); // initing renderer
+                             //
+  scene S;
 
   sprite sp;
   sp.bounds = {3, 3};
-  sp.data = "$#$###$#$";
+  sp.data = "$#$#0#$#$";
   sp.position = {0, 0};
 
   entity e;
@@ -26,6 +31,7 @@ int main() {
   set_entity_position(&e, 3.0f, 8.0f);
   set_entity_sprite(&e, sp);
   set_entity_id(&e, 1);
+  set_entity_lua_script(&e, std::filesystem::path("foo.lua"));
 
   //std::ifstream lua_file;
   //lua_file.open(".\\foo.lua");
@@ -38,7 +44,13 @@ int main() {
 
   lua_State *L = luaL_newstate();
 
+  lua_newtable(L);
+  lua_setglobal(L, "CompRend");
+
+  scene_init_lua(&S, L);
   entity_init_lua(&e, L);
+
+  
 
 
     while (true) {

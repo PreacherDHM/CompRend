@@ -2,6 +2,7 @@
 #define ENTITY_H
 #include "Csprite.h"
 #include "lua.hpp"
+#include <filesystem>
 
 typedef struct {
     float x;
@@ -13,14 +14,14 @@ typedef struct {
     cordnet position;
     int id;
     const char* name;
-    const char* LUA_SCRIPT;
+    char* LUA_SCRIPT;
     sprite sprite;
 } entity;
 
 // SETTERS
 void set_entity_sprite(entity*, sprite sprite);
 void set_entity_position(entity*, float, float );
-void set_entity_lua_script(entity*, char*);
+void set_entity_lua_script(entity*, std::filesystem::path);
 void set_entity_id(entity*, int);
 
 //GETTERS

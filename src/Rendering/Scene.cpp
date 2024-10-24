@@ -1,4 +1,5 @@
 #include "Scene.h"
+#include "lua.h"
 #include "lua.hpp"
 
 scene* current_scene;
@@ -38,9 +39,8 @@ int scene_set_current_lua(lua_State* L) {
 }
 
 int scene_create_lua(lua_State* L) {
-    scene S;
-    scene_create(&S);
-    lua_pushlightuserdata(L,&S);
+    scene* S = (scene*)lua_newuserdata(L, sizeof(scene));
+    scene_create(S);
     return 1;
 }
 

@@ -6,7 +6,9 @@
 #include "lua.h"
 #include <cmath>
 #include <cstdlib>
+#include <fstream>
 #include <assert.h>
+#include <iostream>
 // SETTERS
 void set_entity_sprite(entity *E, sprite sprite) { E->sprite = sprite; }
 
@@ -26,7 +28,25 @@ void set_entity_lua_script(entity *) {
 }
 void set_entity_id(entity *, int) {}
 
-void set_entity_lua_script(entity *E, char *LUA) { E->LUA_SCRIPT = LUA; }
+void set_entity_lua_script(entity *E, std::filesystem::path poo) { 
+    std::filesystem::path p("foo.lua");
+
+    std::cout << poo << "\n";
+    if(std::filesystem::exists(p)) {
+        printf("file exists\n");
+        std::ifstream f(p);
+        std::string line,text;
+        while(std::getline(f, line)) {
+            text += line + "\n";
+        }
+
+        printf("%s\n",text);
+        f.close();
+    }
+    
+    
+
+}
 
 cordnet get_entity_position(entity *E) { return E->position; }
 int get_entity_id(entity *E) { return E->id; }
@@ -70,9 +90,8 @@ int entity_get_name(lua_State *L) {
 
     return 0; 
 }
-void entity_init_lua(entity *E, lua_State *) {
+void entity_init_lua(entity *E, lua_State *L) {
 
-  lua_State* L = luaL_newstate();
   lua_newtable(L);
   lua_setglobal(L, "CompRend");
 
@@ -107,31 +126,10 @@ void entity_init_lua(entity *E, lua_State *) {
     //lua_pushcfunction(L, entity_get_name);
     //lua_settable(L, -3);
 
+
     lua_settable(L, -3);
 
-    constexpr char* lua = R"(
-        entity = CompRend.Entity.Create()
-        CompRend.Entity.Move(entity, 4,5);
-        --x = 42
-      )";
-
-
-
-    int error = luaL_dostring(L,lua);
-    if(error != LUA_OK) {
-        printf("ERROR: %s\n", lua_tostring(L,-1));
-    }
-
-    lua_getglobal(L, "entity");
-    
-    if(lua_isuserdata(L, -1)){
-        entity* x = (entity*)lua_touserdata(L,-1);
-        printf("%f\n", x->position.x);
-    }else {
-        printf("No user data\n");
-    }
-    lua_close(L);
-    //printf("%f\n",(float)lua_tonumber(L,-1));
+    printf("Test Scrip {\n%s\n}", E->LUA_SCRIPT);
 
 }
 
