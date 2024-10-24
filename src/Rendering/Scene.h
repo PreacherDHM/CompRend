@@ -3,10 +3,12 @@
 #define SCENE_MAX_ENTITY_COUNT 20
 #include "Entity.h"
 #include "lua.hpp"
+#include "Rendering.h"
 
 typedef struct {
     int entity_count;
     entity entitys[SCENE_MAX_ENTITY_COUNT];
+    Render::Renderer* R;
     const char* LUA_SCRIPT;
 } scene;
 

@@ -1,7 +1,6 @@
 #include "Entity.h"
 #include "Window/Window.h"
 #include "lstate.h"
-#include "lua.h"
 #include "lua.hpp"
 #include <Rendering.h>
 #include <fstream>
@@ -32,20 +31,8 @@ int main() {
   //lua_file.open(".\\foo.lua");
   //lua_file >> LUA_SCRIPT;
 
-  set_entity_lua_script(&e, R"(
-local position = {}
-CompRend.init = function ()
-    
-end
 
-CompRend.update = function ()
-    position = CompRend.foo:GetPosition()
-    position.x += 0.001
-    CompRend.foo:move(position)
-end
-  )");
-
-  printf("%s", e.LUA_SCRIPT);
+  //printf("%s", e.LUA_SCRIPT);
 
   float y, x = 0.0f;
 
