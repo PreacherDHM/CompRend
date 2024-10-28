@@ -1,6 +1,11 @@
 #include "Scene.h"
+#include "lauxlib.h"
 #include "lua.h"
 #include "lua.hpp"
+#include <filesystem>
+#include <fstream>
+#include <iostream>
+#include <string>
 
 scene* current_scene;
 
@@ -12,7 +17,7 @@ void scene_create(scene* S) {
     S->entity_count = 0;
 }
 
-bool scene_add_entity(scene* S, entity entity) {
+bool scene_add_entity(scene* S, entity *entity) {
     if(S->entity_count < SCENE_MAX_ENTITY_COUNT) {
         S->entity_count++;
         S->entitys[S->entity_count - 1] = entity;
@@ -22,7 +27,7 @@ bool scene_add_entity(scene* S, entity entity) {
 }
 bool scene_remove_entity(scene* S, entity entity) {
     for(int i = 0; i < S->entity_count; i++) {
-        if(S->entitys[i].id == entity.id) {
+        if(S->entitys[i]->id == entity.id) {
             for(int j = i + 1; j < S->entity_count; j++) {
                 S->entitys[j - 1] = S->entitys[j];
             }
@@ -47,7 +52,7 @@ int scene_create_lua(lua_State* L) {
 int scene_add_entity_lua(lua_State* L) {
     scene* S = (scene*)lua_touserdata(L, -3);
     entity* E = (entity*)lua_touserdata(L, -2);
-    lua_pushboolean(L,scene_add_entity(S,*E));
+    lua_pushboolean(L,scene_add_entity(S,E));
     return 1;
 }
 
@@ -58,9 +63,48 @@ int scene_remove_entity_lua(lua_State* L) {
     return 1;
 }
 
-void scene_add_lua_script(scene*, const char*) {}
-void scene_run_lua(scene*) {}
-void scene_init_lua(scene*, lua_State* L) {
+void scene_add_lua_script(scene* s, std::filesystem::path p) {
+    std::filesystem::path path(std::filesystem::current_path() / p);
+    std::string line,text;
+    std::cout << path << '\n';
+    if(std::filesystem::exists(path)) {
+        std::cout << "Loading File " << path << "\n";
+        std::ifstream f(path);
+        while(std::getline(f, line)) {
+            text += line + "\n";
+        }
+        s->script = text;
+        f.close();
+    }
+}
+
+void scene_run_lua(scene*s, lua_State*L) {
+    lua_getglobal(L,"CompRend");
+    lua_getfield(L, -1, "Scene");
+    lua_getfield(L, -1, "Entities");
+
+    int len = lua_rawlen(L, -1);
+    for(int i = 1; i <= len; i++) {
+        lua_pushnumber(L, i);
+        lua_gettable(L, -2);
+
+        lua_pushstring(L, "update");
+        lua_gettable(L, -2);
+        //lua_getglobal(L, "update");
+        if(!lua_isfunction(L, -1)) { 
+            std::cout << "ERROR NO Function skipping\n";
+            return;
+        }
+        lua_pcall(L, 0,0,0);
+        lua_pop(L, 1);
+    }
+    lua_pop(L, 1);
+    lua_pop(L, 1);
+    lua_pop(L, 1);
+    //printf("\r%d", lua_gettop(L));
+}
+void scene_init_lua(scene* s, lua_State* L) {
+    entity_init_lua(L);
     lua_getglobal(L,"CompRend");
     lua_pushstring(L,"Scene");
     lua_newtable(L);
@@ -90,6 +134,38 @@ void scene_init_lua(scene*, lua_State* L) {
     lua_pushcfunction(L, scene_create_lua);
     lua_settable(L, -3);
 
+    lua_pushstring(L, "Entities");
+    lua_newtable(L);
     lua_settable(L, -3);
+
+    lua_settable(L, -3);
+
+    printf("Test Scrip {\n%s\n}", s->script.c_str());
+    int error = luaL_dostring(L, s->script.c_str());
+    if(error != LUA_OK) {
+        std::cout << "\nERROR [LUA]:"<< lua_tostring(L, -1) << "\n";
+    }
+
+    lua_getglobal(L,"CompRend");
+    lua_getfield(L, -1, "Scene");
+    lua_getfield(L, -1, "Entities");
+        lua_pushinteger(L, 1);
+        lua_gettable(L, -2);
+        
+        lua_pushstring(L, "obj");
+        lua_gettable(L, -2);
+        entity* e = (entity*)lua_touserdata(L, -1);
+        scene_add_entity(s, e);
+
+    lua_getglobal(L,"CompRend");
+    lua_getfield(L, -1, "Scene");
+    lua_getfield(L, -1, "Entities");
+        lua_pushinteger(L, 2);
+        lua_gettable(L, -2);
+        
+        lua_pushstring(L, "obj");
+        lua_gettable(L, -2);
+        e = (entity*)lua_touserdata(L, -1);
+        scene_add_entity(s, e);
 }
 void scene_update(scene*) {}

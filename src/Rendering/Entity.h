@@ -10,11 +10,11 @@ typedef struct {
 } cordnet;
 
 typedef struct {
-    bool isInit;
+    bool is_init;
     cordnet position;
     int id;
     const char* name;
-    char* LUA_SCRIPT;
+    std::string script;
     sprite sprite;
 } entity;
 
@@ -56,7 +56,7 @@ sprite get_entity_sprite(entity*);
 ///
 /// This takes a lua_state*
 /// **Returns 0**
-int entity_move(lua_State*);
+int entity_translate(lua_State*);
 /// # Entity Change Sprite
 ///
 /// This will change the sprite data.
@@ -90,7 +90,7 @@ int entity_get_name(lua_State*);
 /// # Entity Init Lua
 ///
 /// This will init the entity lua vars.
-void entity_init_lua(entity*,lua_State* );
+void entity_init_lua(lua_State* );
 /// # Entity Run Lua 
 ///
 /// This will run the update function for the entity.

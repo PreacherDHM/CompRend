@@ -18,4 +18,8 @@ typedef struct {
   bounds bounds;
   position position;
 } sprite;
+
+sprite sprite_create();
+sprite sprite_create(int, int, const char*);
+sprite sprite_create(int, int, int, int, const char*);
 #endif

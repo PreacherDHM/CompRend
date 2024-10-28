@@ -20,6 +20,7 @@ int main() {
   Render::init_renderer(&R); // initing renderer
                              //
   scene S;
+  scene_add_lua_script(&S, std::filesystem::path("foo.lua"));
 
   sprite sp;
   sp.bounds = {3, 3};
@@ -31,7 +32,6 @@ int main() {
   set_entity_position(&e, 3.0f, 8.0f);
   set_entity_sprite(&e, sp);
   set_entity_id(&e, 1);
-  set_entity_lua_script(&e, std::filesystem::path("foo.lua"));
 
   //std::ifstream lua_file;
   //lua_file.open(".\\foo.lua");
@@ -47,16 +47,17 @@ int main() {
   lua_newtable(L);
   lua_setglobal(L, "CompRend");
 
+  entity_init_lua(L);
   scene_init_lua(&S, L);
-  entity_init_lua(&e, L);
-
+      if(S.entity_count > 0) {
+          for(int i = 0; i < S.entity_count; i++) {
+            Render::add_to_buffer(&R, &S.entitys[i]->sprite);
+          }
+      }
   
-
-
     while (true) {
 
-        entity_run_lua(&e, L);
-  //    update_window_events(&W);
+      update_window_events(&W);
   //
   //    for (int i = 0; i < 5; i++) {
   //      if (get_window_input(&W)[i] == 'w') {
@@ -73,14 +74,13 @@ int main() {
   //      }
   //    }
   //
-  //    R.position = {0, 0};
-  //    set_entity_position(&e, x, y);
-  //    Render::add_to_buffer(&R, &e.sprite);
-  //    // Render::add_to_buffer(&R, sp);
-  //    set_window_buffer(&W, R.render_buffer, R.render_buffer_size);
-  //    Render::render_buffer(&R);
-  //    Render::clear_layer(&R, 0);
-  //    window_draw(&W);
+      scene_run_lua(&S,L);
+      R.position = {0, 0};
+      //set_entity_position(&e, x, y);
+      // Render::add_to_buffer(&R, sp);
+      set_window_buffer(&W, R.render_buffer, R.render_buffer_size);
+      Render::render_buffer(&R);
+      window_draw(&W);
     }
   lua_close(L);
 }

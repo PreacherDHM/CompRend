@@ -7,6 +7,8 @@ set (TEST_CPP "main.cpp"
     "Rendering/Lua_Wrapers.cpp"
     "Rendering/Entity.h"
     "Rendering/Entity.cpp"
+    "Rendering/Csprite.cpp"
+    "Rendering/Csprite.h"
     "Rendering/Scene.h"
     "Rendering/Scene.cpp"
 )
