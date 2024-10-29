@@ -2,7 +2,7 @@
 #define RENDERING_H
 #include <Window.h>
 #include <Shader.h>
-#include "csprite.h"
+#include "Csprite.h"
 #ifndef MAX_SPRITE_COUNT
 #define MAX_SPRITE_COUNT 25
 #endif
