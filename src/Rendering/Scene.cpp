@@ -149,23 +149,18 @@ void scene_init_lua(scene* s, lua_State* L) {
     lua_getglobal(L,"CompRend");
     lua_getfield(L, -1, "Scene");
     lua_getfield(L, -1, "Entities");
-        lua_pushinteger(L, 1);
+    int len = lua_rawlen(L, -1);
+    for(int i = 1; i <= len; i++) {
+        lua_pushinteger(L, i);
         lua_gettable(L, -2);
         
         lua_pushstring(L, "obj");
         lua_gettable(L, -2);
         entity* e = (entity*)lua_touserdata(L, -1);
         scene_add_entity(s, e);
-
-    lua_getglobal(L,"CompRend");
-    lua_getfield(L, -1, "Scene");
-    lua_getfield(L, -1, "Entities");
-        lua_pushinteger(L, 2);
-        lua_gettable(L, -2);
-        
-        lua_pushstring(L, "obj");
-        lua_gettable(L, -2);
-        e = (entity*)lua_touserdata(L, -1);
-        scene_add_entity(s, e);
+    }
+    lua_pop(L,1);
+    lua_pop(L,1);
+    lua_pop(L,1);
 }
 void scene_update(scene*) {}
