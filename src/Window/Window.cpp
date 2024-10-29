@@ -70,9 +70,9 @@ const char *get_window_input(window *W) { return input; }
 ///
 /// Draws the window buffer to the console
 void window_draw(window *W) {
-    printf("\033[?25l");
-    printf("\033[0;0f");
-    printf("%s", W->buffer);
+    write(STDOUT_FILENO,"\033[?25l",6);
+    write("\033[0;0f");
+    write("%s", W->buffer);
 }
 
 /// # Window Clear Buffer
