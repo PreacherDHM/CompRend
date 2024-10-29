@@ -12,7 +12,6 @@ char *LUA_SCRIPT;
 
 int main() {
 
-
   window W = {};
   window_init(&W); // init window
 
@@ -22,7 +21,7 @@ int main() {
   scene S;
   scene_add_lua_script(&S, std::filesystem::path("foo.lua"));
 
-  sprite sp;
+  csprite sp;
   sp.bounds = {3, 3};
   sp.data = "$#$#0#$#$";
   sp.position = {0, 0};

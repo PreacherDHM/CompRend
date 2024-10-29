@@ -11,7 +11,7 @@
 #include <iostream>
 #include <string>
 // SETTERS
-void set_entity_sprite(entity *E, sprite sprite) { E->sprite = sprite; }
+void set_entity_sprite(entity *E, csprite sprite) { E->sprite = sprite; }
 
 void set_entity_position(entity *E, float x, float y) {
   E->position.x = x;
@@ -50,7 +50,7 @@ void set_entity_lua_script(entity *E, std::filesystem::path p) {
 
 cordnet get_entity_position(entity *E) { return E->position; }
 int get_entity_id(entity *E) { return E->id; }
-sprite get_entity_sprite(entity *E) { return E->sprite; }
+csprite get_entity_sprite(entity *E) { return E->sprite; }
 
 // Creates a entity in lua
 int entity_create(lua_State *L) {

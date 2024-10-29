@@ -11,7 +11,7 @@ void Render::set_rendering_mode(Render::Renderer *R,
   R->mode = mode;
 }
 
-void Render::add_to_buffer(Renderer *R, sprite* sprite) {
+void Render::add_to_buffer(Renderer *R, csprite* sprite) {
   if (R->sprite_count < MAX_SPRITE_COUNT) {
     R->sprites[R->sprite_count] = sprite;
     R->sprite_count++;
@@ -34,7 +34,7 @@ void Render::render_buffer(Renderer *R) {
   }
   // R->render_buffer[0] = '#';
   for (int i = 0; i < R->sprite_count; i++) {
-    sprite* s = R->sprites[i];
+    csprite* s = R->sprites[i];
     if ((s->position.y - (s->bounds.y / 2) + R->W->size.Y / 2 > 0 ||
          s->position.x - (s->bounds.x / 2) + R->W->size.X / 2 > 0) ||
         (s->position.y + (s->bounds.y / 2) + R->W->size.Y / 2 > R->W->size.Y ||

@@ -4,22 +4,22 @@
 /// # sprite
 ///
 /// The sprite holds the char data like a image.
-struct bounds {
+struct csprite_bounds {
   int x;
   int y;
 };
 typedef struct {
   int x;
   int y;
-}position ;
+}csprite_position ;
 typedef struct {
   const char *data;
   int data_size;
-  bounds bounds;
-  position position;
-} sprite;
+  csprite_bounds bounds;
+  csprite_position position;
+} csprite;
 
-sprite sprite_create();
-sprite sprite_create(int, int, const char*);
-sprite sprite_create(int, int, int, int, const char*);
+csprite sprite_create();
+csprite sprite_create(int, int, const char*);
+csprite sprite_create(int, int, int, int, const char*);
 #endif

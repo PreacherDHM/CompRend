@@ -28,7 +28,7 @@ namespace Render {
         char* layers[300 * 200];
         rendering_mode mode;
         char* render_buffer;
-        sprite* sprites[MAX_SPRITE_COUNT];
+        csprite* sprites[MAX_SPRITE_COUNT];
         int render_buffer_size;
         int sprite_count;
         int current_layer;
@@ -41,7 +41,7 @@ namespace Render {
     /// This will set the rendering mode of the renderer. *IE world and ui modes.*
     void init_renderer(Renderer*);
     void set_rendering_mode(Renderer*, rendering_mode mode);
-    void add_to_buffer(Renderer*, sprite*);
+    void add_to_buffer(Renderer*, csprite*);
     void render_buffer(Renderer*);
     void swop_layer(Renderer*, int);
     void clear_layer(Renderer*, int);

@@ -15,11 +15,11 @@ typedef struct {
     int id;
     const char* name;
     std::string script;
-    sprite sprite;
+    csprite sprite;
 } entity;
 
 // SETTERS
-void set_entity_sprite(entity*, sprite sprite);
+void set_entity_sprite(entity*, csprite sprite);
 void set_entity_position(entity*, float, float );
 void set_entity_lua_script(entity*, std::filesystem::path);
 void set_entity_id(entity*, int);
@@ -44,7 +44,7 @@ int get_entity_id(entity*);
 ///
 ///
 /// returns sprite
-sprite get_entity_sprite(entity*);
+csprite get_entity_sprite(entity*);
 
 // ----- LUA -----
 
