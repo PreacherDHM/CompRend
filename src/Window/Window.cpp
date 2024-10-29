@@ -71,8 +71,8 @@ const char *get_window_input(window *W) { return input; }
 /// Draws the window buffer to the console
 void window_draw(window *W) {
     write(STDOUT_FILENO,"\033[?25l",6);
-    write("\033[0;0f");
-    write("%s", W->buffer);
+    write(STDOUT_FILENO,"\033[0;0f", 6);
+    write(STDOUT_FILENO, W->buffer, W->buffer_size);
 }
 
 /// # Window Clear Buffer
