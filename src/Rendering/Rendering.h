@@ -12,7 +12,7 @@ namespace Render {
             int x;
             int y;
         };
-        struct position {
+        struct rendering_position {
             int x;
             int y;
         };
@@ -32,7 +32,7 @@ namespace Render {
         int render_buffer_size;
         int sprite_count;
         int current_layer;
-        position position;
+        rendering_position position;
     } Renderer;
 
     
