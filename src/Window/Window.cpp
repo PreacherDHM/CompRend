@@ -16,10 +16,10 @@ static char input[127];
 
 const char* clear = "'\033[2J'";
 void set_window_size(window *W, int x, int y) {
-  W->size.X = x;
-  W->size.Y = y;
-  WriteFile(outHandle, clear, strlen(clear), NULL, NULL);
-  W->resize_event = true;
+  //W->size.X = x;
+  //W->size.Y = y;
+  //WriteFile(outHandle, clear, strlen(clear), NULL, NULL);
+  //W->resize_event = true;
 }
 
 /// # Set Window State
