@@ -22,8 +22,8 @@ int main() {
   scene_add_lua_script(&S, std::filesystem::path("foo.lua"));
 
   csprite sp;
-  sp.bounds = {3, 3};
-  sp.data = "$#$#0#$#$";
+  sp.bounds = {1, 9};
+  sp.data = "hii there";
   sp.position = {0, 0};
 
   entity e;
