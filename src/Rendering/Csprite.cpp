@@ -1,5 +1,5 @@
 #include "Csprite.h"
-#include "lua.h"
+#include <lua.hpp>
 
 csprite sprite_create() {
     csprite s;

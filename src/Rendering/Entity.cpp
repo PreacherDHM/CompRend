@@ -2,8 +2,6 @@
 #include "Csprite.h"
 #include "Scene.h"
 #include "filesystem"
-#include "lauxlib.h"
-#include "lua.h"
 #include <assert.h>
 #include <cmath>
 #include <cstdlib>
@@ -57,10 +55,51 @@ int entity_create(lua_State *L) {
 
   const char *name;
   float x, y;
+  csprite sp = sprite_create();
 
-  name = lua_tostring(L, -3);
-  x = (float)lua_tonumber(L, -2);
-  y = (float)lua_tonumber(L, -1);
+  if(lua_istable(L,-1)){
+      name = lua_tostring(L, -4);
+      x = (float)lua_tonumber(L, -3);
+      y = (float)lua_tonumber(L, -2);
+
+      // Getting sprite data
+      lua_pushstring(L, "sprite");
+      lua_gettable(L,-2);
+      sp.data = lua_tostring(L, -1);
+
+      lua_pop(L, 1);
+
+      lua_pushstring(L, "bounds");
+      lua_gettable(L,-2);
+      if(lua_istable(L, -1)) {
+        
+        lua_pushstring(L, "x");
+        lua_gettable(L, -2);
+        if(lua_isnumber(L, -1)) {
+            sp.bounds.x = (int)lua_tonumber(L, -1);
+        }
+
+      lua_pop(L, 1);
+
+        lua_pushstring(L, "y");
+        lua_gettable(L, -2);
+        if(lua_isnumber(L, -1)) {
+            sp.bounds.y = (int)lua_tonumber(L, -1);
+        }
+
+      }
+
+      lua_pop(L, 1);
+      lua_pop(L, 1);
+
+
+  } else {
+    name = lua_tostring(L, -3);
+    x = (float)lua_tonumber(L, -2);
+    y = (float)lua_tonumber(L, -1);
+    sp = sprite_create();
+  }
+
 
   lua_newtable(L); // returned table
 
@@ -69,7 +108,7 @@ int entity_create(lua_State *L) {
   lua_settable(L, -3);
 
   E->id = rand();
-  E->sprite = sprite_create();
+  E->sprite = sp;
   E->name = name;
   set_entity_position(E, x, y);
 
@@ -121,8 +160,10 @@ int entity_translate(lua_State *L) {
     }
     
 
+    lua_pop(L,1);
+
     lua_pushstring(L, "y");
-    lua_gettable(L, -3);
+    lua_gettable(L, -2);
     if (lua_isnumber(L, -1)) {
       y = (float)lua_tonumber(L, -1);
     }
@@ -168,9 +209,6 @@ int entity_get_name(lua_State *L) {
   return 0;
 }
 void entity_init_lua(lua_State *L) {
-
-  lua_newtable(L);
-  lua_setglobal(L, "CompRend");
 
   // int table = lua_gettop(L);
   lua_getglobal(L, "CompRend");

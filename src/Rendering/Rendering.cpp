@@ -64,7 +64,9 @@ void Render::render_buffer(Renderer *R) {
                   R->W->size.X)) +
                 ((R->W->size.X / 2) +
                  (R->position.x - s->position.x - (s->bounds.x / 2) + x));
-            R->render_buffer[buffer_index] = s->data[render_index];
+            if(s->data[render_index] != ' ') {
+              R->render_buffer[buffer_index] = s->data[render_index];
+            }
           }
         }
       }

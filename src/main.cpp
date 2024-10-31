@@ -1,11 +1,14 @@
 #include "Entity.h"
 #include "Scene.h"
+#include "windows.h"
 #include "Window/Window.h"
-#include "lstate.h"
+#include "Window/window_lua.h"
 #include "lua.h"
 #include "lua.hpp"
 #include <Rendering.h>
+#include <chrono>
 #include <filesystem>
+#include <thread>
 #include <fstream>
 
 char *LUA_SCRIPT;
@@ -39,7 +42,8 @@ int main() {
 
   //printf("%s", e.LUA_SCRIPT);
 
-  float y, x = 0.0f;
+  int y, x = 0.0f;
+  bool reloaded = false;
 
   lua_State *L = luaL_newstate();
 
@@ -47,34 +51,23 @@ int main() {
   lua_setglobal(L, "CompRend");
 
   entity_init_lua(L);
+  lua_window_init(L);
   scene_init_lua(&S, L);
-      if(S.entity_count > 0) {
-          for(int i = 0; i < S.entity_count; i++) {
-            Render::add_to_buffer(&R, &S.entitys[i]->sprite);
-          }
+  if(S.entity_count > 0) {
+      for(int i = 0; i < S.entity_count; i++) {
+        Render::add_to_buffer(&R, &S.entitys[i]->sprite);
       }
+  }
   
+
     while (true) {
 
+      set_window_start_input();
       update_window_events(&W);
-  //
-  //    for (int i = 0; i < 5; i++) {
-  //      if (get_window_input(&W)[i] == 'w') {
-  //        y += 0.1f;
-  //      }
-  //      if (get_window_input(&W)[i] == 's') {
-  //        y -= 0.1f;
-  //      }
-  //      if (get_window_input(&W)[i] == 'd') {
-  //        x -= 0.1f;
-  //      }
-  //      if (get_window_input(&W)[i] == 'a') {
-  //        x += 0.1f;
-  //      }
-  //    }
-  //
+      set_window_get_input();
+
       scene_run_lua(&S,L);
-      R.position = {0, 0};
+      R.position = {0, x};
       //set_entity_position(&e, x, y);
       // Render::add_to_buffer(&R, sp);
       set_window_buffer(&W, R.render_buffer, R.render_buffer_size);

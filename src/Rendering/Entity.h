@@ -1,7 +1,7 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 #include "Csprite.h"
-#include "lua.hpp"
+#include <lua.hpp>
 #include <filesystem>
 
 typedef struct {

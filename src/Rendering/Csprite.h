@@ -1,6 +1,6 @@
 #ifndef C_SPRITE_H
 #define C_SPRITE_H
-#include <lua.h>
+#include <lua.hpp>
 
 /// # sprite
 ///

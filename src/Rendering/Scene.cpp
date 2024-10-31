@@ -1,6 +1,5 @@
 #include "Scene.h"
 #include "lauxlib.h"
-#include "lua.h"
 #include "lua.hpp"
 #include <filesystem>
 #include <fstream>

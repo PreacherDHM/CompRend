@@ -1,6 +1,6 @@
 #include "Window.h"
 
-#ifdef __linux
+#ifdef _Linux
 
 #include <stdio.h>
 #include <thread>
@@ -13,6 +13,7 @@ std::thread worker;
 static char input_buffer[127];
 static int input_index;
 static char input[127];
+
 
 const char* clear = "'\033[2J'";
 void set_window_size(window *W, int x, int y) {
@@ -140,8 +141,19 @@ void update_window_events(window *W) {
 }
 #endif
 
+
+/*=====================================================
+ * WINDOWS
+ *=====================================================
+ * */
+
+
+
+
 #ifdef _WIN32
 #include "windows.h"
+#include "Windows.h"
+#include <chrono>
 #include <conio.h>
 #include <stdio.h>
 #include <thread>
@@ -150,11 +162,17 @@ void update_window_events(window *W) {
 HANDLE outHandle;
 HANDLE inHandle;
 
-static bool did_work = false;
+static bool get_input = false;
 std::thread worker;
 static char input_buffer[127];
 static int input_index;
 static char input[127];
+static int input_size;
+
+float delta_time;
+
+std::chrono::time_point tp2 = std::chrono::system_clock::now();
+std::chrono::time_point tp1= std::chrono::system_clock::now();;
 
 const char* clear = "'\033[2J'";
 void set_window_size(window *W, int x, int y) {
@@ -208,6 +226,38 @@ window_state get_window_state(window *W) { return W->state; }
 /// This will return the console input from the user.
 const char *get_window_input(window *W) { return input; }
 
+
+float get_window_delta_time() {
+    return delta_time;
+}
+
+
+bool get_window_key_down(const char c) { 
+    for(int i = 0; i < input_size; i++) {
+        if( c == input[i]) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool keypressed = false;
+
+bool get_window_key_press(const char c) {
+    for(int i = 0; i < input_size; i++) {
+        if( c == input[i] ) {
+            if(keypressed == false) {
+                keypressed = true;
+                return true;
+            } else  {
+                return false;
+            }
+        }
+    }
+    keypressed = false;
+    return false;
+}
+
 /// window_draw
 ///
 /// Draws the window buffer to the console
@@ -216,24 +266,46 @@ void window_draw(window *W) {
   WriteConsoleOutputCharacter(outHandle, W->buffer, W->buffer_size, {0,0}, &dwBytesWritten);
 }
 
+void set_window_get_input() { 
+    get_input = false;
+  if(input_index > 0) {
+      for(int i = 0; i < input_index; i++){
+        input[i] = input_buffer[i];
+      }
+      input_size = input_index;
+  }
+  input_index = 0;
+}
+void set_window_start_input() { 
+    get_input = true;
+    for(int i = 0; i < input_size; i++){
+        input[i] = '\0';
+    }
+    input_size = 0;
+}
+
 /// # Window Clear Buffer
 ///
 /// This will clear the window buffer.
 void window_clear_buffer(window *W) {
   // W->buffer[0] = '\0';
+  WriteFile(outHandle, "\033[2J", 4,NULL, NULL);
+
 }
 
 // This worker get the input from the user and puts it in input_buffer
 void DoWork() {
-
-  DWORD filesize = 0;
-  DWORD nRead;
   char buffer[127];
-  while (!did_work) {
-    ReadFile(inHandle, buffer, 127, &nRead, NULL);
-    for (int i = 0; i < nRead; i++) {
-      input_buffer[input_index] = buffer[i];
-      input_index ++;
+  DWORD read_count;
+  while(true) {
+    if(get_input) {
+        if(_kbhit()) {
+          ReadFile(inHandle,buffer,127,&read_count,NULL);
+          for(int i = 0; i < read_count; i++) {
+              input_buffer[input_index] = buffer[i];
+              input_index ++;
+          }
+        }
     }
   }
 }
@@ -264,7 +336,8 @@ bool get_window_resize_event(window* W) {
 /// 
 /// This inits the window and starts up cushial functions.
 void window_init(window *W) {
-  outHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+  outHandle = CreateConsoleScreenBuffer(GENERIC_READ | GENERIC_WRITE, 0, NULL, CONSOLE_TEXTMODE_BUFFER, NULL);
+  SetConsoleActiveScreenBuffer(outHandle);
   inHandle = GetStdHandle(STD_INPUT_HANDLE);
   W->resize_event = true;
 
@@ -278,7 +351,10 @@ void window_init(window *W) {
   lpCursor.bVisible = false;
   lpCursor.dwSize = 10;
   SetConsoleCursorInfo(outHandle, &lpCursor);
-  input_event_start();
+  //input_event_start();
+  tp2 = std::chrono::system_clock::now();
+  tp1 = std::chrono::system_clock::now();
+
 }
 
 /// # Update Window Events 
@@ -290,20 +366,16 @@ void update_window_events(window *W) {
   GetConsoleScreenBufferInfo(outHandle, &cbiInfo);
 
 
+
+  tp2 = std::chrono::system_clock::now();
+  std::chrono::duration<float> elapsedTime = tp2 - tp1;
+  tp1 = tp2;
+  delta_time = elapsedTime.count();
+
+
   if (W->size.X != cbiInfo.dwSize.X || W->size.Y != cbiInfo.dwSize.Y) {
     set_window_size(W, (int)cbiInfo.dwSize.X, (int)cbiInfo.dwSize.Y);
   }
 
-  if(input_index > 0) {
-      for(int i = 0; i < sizeof(input_buffer)/sizeof(input_buffer[0]); i++){
-        input[i] = input_buffer[i];
-      }
-      input_index = 0;
-  }else {
-      for(int i = 0; i < sizeof(input)/sizeof(input[0]); i++){
-        input[i] = '\0';
-      }
-      
-  }
 }
 #endif
