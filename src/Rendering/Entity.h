@@ -11,6 +11,7 @@ typedef struct {
 
 typedef struct {
     bool is_init;
+    bool is_active;
     cordnet position;
     int id;
     const char* name;

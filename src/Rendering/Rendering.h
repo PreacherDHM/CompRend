@@ -31,6 +31,7 @@ namespace Render {
         csprite* sprites[MAX_SPRITE_COUNT];
         int render_buffer_size;
         int sprite_count;
+        int partical_count;
         int current_layer;
         rendering_position position;
     } Renderer;

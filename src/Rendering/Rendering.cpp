@@ -33,6 +33,8 @@ void Render::render_buffer(Renderer *R) {
     R->render_buffer[i] = '-';
   }
   // R->render_buffer[0] = '#';
+
+  // rendering sprites
   for (int i = 0; i < R->sprite_count; i++) {
     csprite* s = R->sprites[i];
     if ((s->position.y - (s->bounds.y / 2) + R->W->size.Y / 2 > 0 ||
@@ -44,6 +46,10 @@ void Render::render_buffer(Renderer *R) {
       for (int y = 0; y < s->bounds.y; y++) {
         for (int x = 0; x < s->bounds.x; x++) {
           render_index = y * s->bounds.x + x;
+          if(s->data[render_index] == ' ') {
+              continue;
+          }
+          
           // sprite
           if ((R->position.x - s->position.x - (s->bounds.x / 2) + x +
                        (R->W->size.X / 2) <
@@ -64,13 +70,15 @@ void Render::render_buffer(Renderer *R) {
                   R->W->size.X)) +
                 ((R->W->size.X / 2) +
                  (R->position.x - s->position.x - (s->bounds.x / 2) + x));
-            if(s->data[render_index] != ' ') {
               R->render_buffer[buffer_index] = s->data[render_index];
-            }
           }
         }
       }
     }
+  }
+
+  for (int i = 0; i < R->partical_count; i++) {
+
   }
 }
 void Render::swop_layer(Renderer *, int) {}

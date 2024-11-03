@@ -1,5 +1,6 @@
 #include "Scene.h"
 #include "lauxlib.h"
+#include "lua.h"
 #include "lua.hpp"
 #include <filesystem>
 #include <fstream>
@@ -49,10 +50,36 @@ int scene_create_lua(lua_State* L) {
 }
 
 int scene_add_entity_lua(lua_State* L) {
-    scene* S = (scene*)lua_touserdata(L, -3);
-    entity* E = (entity*)lua_touserdata(L, -2);
-    lua_pushboolean(L,scene_add_entity(S,E));
-    return 1;
+    
+    int len = lua_rawlen(L,-1);
+    lua_pushstring(L, "obj");
+    lua_gettable(L, -2);
+    if(!lua_isuserdata(L,-1)) {
+        
+        printf("is not table\n");
+        return 0;
+    }
+    lua_pop(L, 1);
+
+    lua_getglobal(L,"CompRend");
+    lua_getfield(L, -1, "Scene");
+    lua_getfield(L, -1, "Entities");
+    len = lua_rawlen(L,-1);
+    lua_pushinteger(L, 2);
+    lua_rawget(L,-4);
+    lua_settable(L, -3);
+    
+
+    lua_getfield(L, -1, "Entities");
+    len = lua_rawlen(L,-1);
+    printf("count %d\n", lua_gettop(L));
+    //lua_pop(L, 1);
+    //lua_pop(L, 1);
+    //lua_pop(L, 1);
+    lua_getglobal(L,"CompRend");
+    lua_getfield(L, -1, "Scene");
+    lua_getfield(L, -1, "Entities");
+    return 0;
 }
 
 int scene_remove_entity_lua(lua_State* L) {
@@ -87,14 +114,20 @@ void scene_run_lua(scene*s, lua_State*L) {
         lua_pushnumber(L, i);
         lua_gettable(L, -2);
 
-        lua_pushstring(L, "update");
+        lua_pushstring(L, "active");
         lua_gettable(L, -2);
+        if(lua_toboolean(L, -1)) {
+
+        lua_pushstring(L, "update");
+        lua_gettable(L, -3);
         //lua_getglobal(L, "update");
         if(!lua_isfunction(L, -1)) { 
             std::cout << "ERROR NO Function skipping\n";
             return;
         }
         lua_pcall(L, 0,0,0);
+        }
+        lua_pop(L, 1);
         lua_pop(L, 1);
     }
     lua_pop(L, 1);
@@ -108,6 +141,9 @@ void scene_init_lua(scene* s, lua_State* L) {
     lua_pushstring(L,"Scene");
     lua_newtable(L);
 
+    lua_pushstring(L, "Entities");
+    lua_newtable(L);
+    lua_settable(L, -3);
 
     // Takes a ud of type scene and makes scene 
     // the current scene.
@@ -118,7 +154,7 @@ void scene_init_lua(scene* s, lua_State* L) {
 
     // Takes a ud of type scene and of type entity 
     // then adds the entity to scene.
-    lua_pushstring(L,"AddEntity");
+    lua_pushstring(L,"Add");
     lua_pushcfunction(L, scene_add_entity_lua);
     lua_settable(L, -3);
 
@@ -133,9 +169,6 @@ void scene_init_lua(scene* s, lua_State* L) {
     lua_pushcfunction(L, scene_create_lua);
     lua_settable(L, -3);
 
-    lua_pushstring(L, "Entities");
-    lua_newtable(L);
-    lua_settable(L, -3);
 
     lua_settable(L, -3);
 
@@ -150,6 +183,7 @@ void scene_init_lua(scene* s, lua_State* L) {
     lua_getfield(L, -1, "Entities");
 
     int len = lua_rawlen(L, -1);
+    printf("setting entities %d", len);
     for(int i = 1; i <= len; i++) {
         printf("index %d\n",i);
         lua_pushnumber(L, i);
@@ -166,6 +200,8 @@ void scene_init_lua(scene* s, lua_State* L) {
                 entity* e = (entity*)lua_touserdata(L, -1);
                 printf("Setting entity\n");
                 scene_add_entity(s, e);
+            } else {
+                printf("no user data");
             }
             lua_pop(L,1);
             lua_pop(L,1);

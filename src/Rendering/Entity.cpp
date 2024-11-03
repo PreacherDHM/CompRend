@@ -110,6 +110,7 @@ int entity_create(lua_State *L) {
   E->id = rand();
   E->sprite = sp;
   E->name = name;
+  E->is_active = true;
   set_entity_position(E, x, y);
 
   lua_pushstring(L, "name"); // creates the name.
@@ -118,6 +119,10 @@ int entity_create(lua_State *L) {
 
   lua_pushstring(L, "id"); // creates the id.
   lua_pushnumber(L, E->id);
+  lua_settable(L, -3);
+
+  lua_pushstring(L, "active"); // creates the id.
+  lua_pushboolean(L, E->is_active);
   lua_settable(L, -3);
 
   lua_pushstring(L, "sprite"); // creates a sprite.
