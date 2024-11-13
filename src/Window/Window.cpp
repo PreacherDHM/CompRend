@@ -1,3 +1,4 @@
+#include <tchar.h>
 #include "Window.h"
 
 #ifdef _Linux
@@ -151,7 +152,6 @@ void update_window_events(window *W) {
 
 
 #ifdef _WIN32
-#include "windows.h"
 #include "Windows.h"
 #include <chrono>
 #include <conio.h>
@@ -178,7 +178,7 @@ const char* clear = "'\033[2J'";
 void set_window_size(window *W, int x, int y) {
   W->size.X = x;
   W->size.Y = y;
-  WriteFile(outHandle, clear, strlen(clear), NULL, NULL);
+  //WriteFile(outHandle, clear, strlen(clear), NULL, NULL);
   W->resize_event = true;
 }
 
@@ -204,7 +204,7 @@ void set_window_name(window *W, const char *window_name) {
 /// # Set Window Buffer
 ///
 /// This will set the window buffer that it will be rendering from.
-void set_window_buffer(window *W, char *buffer, int size) { W->buffer = buffer; W->buffer_size = size; }
+void set_window_buffer(window *W, wchar_t *buffer, int size) { W->buffer = buffer; W->buffer_size = size; }
 
 /// # Get Window Size
 ///
@@ -263,7 +263,8 @@ bool get_window_key_press(const char c) {
 /// Draws the window buffer to the console
 void window_draw(window *W) {
   DWORD dwBytesWritten = 0;
-  WriteConsoleOutputCharacter(outHandle, W->buffer, W->buffer_size, {0,0}, &dwBytesWritten);
+  SetConsoleOutputCP(CP_UTF8);
+  WriteConsoleOutputCharacterW(outHandle, W->buffer, W->buffer_size, {0,0}, &dwBytesWritten);
 }
 
 void set_window_get_input() { 
@@ -289,7 +290,7 @@ void set_window_start_input() {
 /// This will clear the window buffer.
 void window_clear_buffer(window *W) {
   // W->buffer[0] = '\0';
-  WriteFile(outHandle, "\033[2J", 4,NULL, NULL);
+  //WriteFile(outHandle, "\033[2J", 4,NULL, NULL);
 
 }
 
@@ -312,7 +313,7 @@ void DoWork() {
 /// # Input Event Start 
 ///
 /// This will start the input event thread.
-void input_event_start() { worker = std::thread(DoWork); }
+void input_event_start() { (DoWork()); }
 
 /// # Window Close 
 ///

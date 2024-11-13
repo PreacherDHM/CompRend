@@ -4,7 +4,7 @@ project(LuaTest)
 
 # C++ VERSION
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 
 # Exprot compile commmands for visual studio code and for nvim 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)

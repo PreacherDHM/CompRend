@@ -1,6 +1,7 @@
 #ifndef C_SPRITE_H
 #define C_SPRITE_H
 #include <lua.hpp>
+#include <string>
 
 /// # sprite
 ///
@@ -22,7 +23,10 @@ typedef struct {
 } canimation;
 
 typedef struct {
-  const char *data;
+    wchar_t *data;
+    wchar_t *shader;
+	int data_len;
+	int shader_len;
   int data_size;
   csprite_bounds bounds;
   csprite_position position;

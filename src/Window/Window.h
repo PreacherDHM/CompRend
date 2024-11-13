@@ -24,7 +24,7 @@ struct window {
   window_state state = {RESIZEABLE};
   window_input_mode input_mode = {RAW};
   const char *name = "";
-  const char *buffer = "testing on the test\n thest\n";
+  const wchar_t *buffer;
   int buffer_size;
   bool resize_event;
 };
@@ -36,7 +36,7 @@ void set_window_size(window *, int, int);
 void set_window_state(window *, window_state);
 void set_window_input_mode(window *, window_input_mode);
 void set_window_name(window *, const char *);
-void set_window_buffer(window *, char*, int);
+void set_window_buffer(window *, wchar_t*, int);
 void set_window_get_input();
 void set_window_start_input();
 

@@ -1,16 +1,17 @@
 #ifndef SCENE_H
 #define SCENE_H
-#define SCENE_MAX_ENTITY_COUNT 20
+#define SCENE_MAX_ENTITY_COUNT 1000
 #include "Entity.h"
 #include "lua.hpp"
 #include "Rendering.h"
 
 typedef struct {
-    int entity_count;
+    int entity_count = 0;
     int scene_id;
     entity *entitys[SCENE_MAX_ENTITY_COUNT];
     Render::Renderer* R;
     std::string script;
+    bool entity_added;
 } scene;
 
 scene* scene_get_current();

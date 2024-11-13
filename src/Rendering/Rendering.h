@@ -4,7 +4,7 @@
 #include <Shader.h>
 #include "Csprite.h"
 #ifndef MAX_SPRITE_COUNT
-#define MAX_SPRITE_COUNT 25
+#define MAX_SPRITE_COUNT 1000
 #endif
 
 namespace Render {
@@ -27,7 +27,7 @@ namespace Render {
         window* W;
         char* layers[300 * 200];
         rendering_mode mode;
-        char* render_buffer;
+        wchar_t* render_buffer;
         csprite* sprites[MAX_SPRITE_COUNT];
         int render_buffer_size;
         int sprite_count;

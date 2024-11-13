@@ -7,7 +7,9 @@
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
+#include <stdlib.h>
 #include <string>
+#include <cstring>
 // SETTERS
 void set_entity_sprite(entity *E, csprite sprite) { E->sprite = sprite; }
 
@@ -65,9 +67,18 @@ int entity_create(lua_State *L) {
       // Getting sprite data
       lua_pushstring(L, "sprite");
       lua_gettable(L,-2);
-      sp.data = lua_tostring(L, -1);
+	  wcscat(sp.data, L"test");
 
       lua_pop(L, 1);
+
+      lua_pushstring(L,"shader");
+      lua_gettable(L, -2);
+       if(lua_isstring(L, -1)) {
+        //sp.shader =  L"ni";
+		wcscat(sp.data, L"ni");
+          //mbstowcs(sp.shader, "ni",2);
+       }
+       lua_pop(L,1);
 
       lua_pushstring(L, "bounds");
       lua_gettable(L,-2);
@@ -125,10 +136,6 @@ int entity_create(lua_State *L) {
   lua_pushboolean(L, E->is_active);
   lua_settable(L, -3);
 
-  lua_pushstring(L, "sprite"); // creates a sprite.
-  lua_pushlightuserdata(L, &E->sprite);
-  lua_settable(L, -3);
-
   lua_pushstring(L, "position");
   lua_newtable(L); // start of position table
 
@@ -181,7 +188,51 @@ int entity_translate(lua_State *L) {
   return 0;
 }
 
-int entity_change_sprite(lua_State *) { return 0; }
+int entity_change_sprite(lua_State *L) { 
+    entity* e = (entity*)lua_touserdata(L,-2);
+
+  if(lua_istable(L,-1)){
+
+      // Getting sprite data
+      lua_pushstring(L, "sprite");
+      lua_gettable(L,-2);
+      //e->sprite.data = lua_tostring(L, -1);
+      //mbstowcs(e->sprite.data, lua_tostring(L, -1),strlen(lua_tostring(L, -1)));
+
+      lua_pop(L, 1);
+
+      lua_pushstring(L,"shader");
+      lua_gettable(L, -2);
+       if(lua_isstring(L, -1)) {
+        //mbstowcs(e->sprite.shader, lua_tostring(L, -1),strlen(lua_tostring(L, -1)));
+       }
+       lua_pop(L,1);
+
+      lua_pushstring(L, "bounds");
+      lua_gettable(L,-2);
+      if(lua_istable(L, -1)) {
+        
+        lua_pushstring(L, "x");
+        lua_gettable(L, -2);
+        if(lua_isnumber(L, -1)) {
+            e->sprite.bounds.x = (int)lua_tonumber(L, -1);
+        }
+
+      lua_pop(L, 1);
+
+        lua_pushstring(L, "y");
+        lua_gettable(L, -2);
+        if(lua_isnumber(L, -1)) {
+            e->sprite.bounds.y = (int)lua_tonumber(L, -1);
+        }
+
+      }
+
+      lua_pop(L, 1);
+      lua_pop(L, 1);
+  }
+
+    return 0; }
 int entity_get_position(lua_State *L) {
   if (lua_islightuserdata(L, -1)) {
     entity *e = (entity *)lua_touserdata(L, -1);
@@ -230,9 +281,9 @@ void entity_init_lua(lua_State *L) {
   lua_pushcfunction(L, entity_translate);
   lua_settable(L, -3);
 
-  // lua_pushstring(L, "ChangeSprite");
-  // lua_pushcfunction(L, entity_change_sprite);
-  // lua_settable(L, -3);
+   lua_pushstring(L, "ChangeSprite");
+   lua_pushcfunction(L, entity_change_sprite);
+   lua_settable(L, -3);
 
   // lua_pushstring(L, "GetId");
   // lua_pushcfunction(L, entity_get_id);

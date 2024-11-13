@@ -24,16 +24,8 @@ int main() {
   scene S;
   scene_add_lua_script(&S, std::filesystem::path("foo.lua"));
 
-  csprite sp;
-  sp.bounds = {1, 9};
-  sp.data = "hii there";
-  sp.position = {0, 0};
+  S.R = &R;
 
-  entity e;
-  e.name = "foo";
-  set_entity_position(&e, 3.0f, 8.0f);
-  set_entity_sprite(&e, sp);
-  set_entity_id(&e, 1);
 
   //std::ifstream lua_file;
   //lua_file.open(".\\foo.lua");
@@ -46,18 +38,15 @@ int main() {
   bool reloaded = false;
 
   lua_State *L = luaL_newstate();
+  luaL_openlibs(L);
 
   lua_newtable(L);
   lua_setglobal(L, "CompRend");
 
   entity_init_lua(L);
   lua_window_init(L);
+  csprite_init_lua(L);
   scene_init_lua(&S, L);
-  if(S.entity_count > 0) {
-      for(int i = 0; i < S.entity_count; i++) {
-        Render::add_to_buffer(&R, &S.entitys[i]->sprite);
-      }
-  }
   
 
     while (true) {
