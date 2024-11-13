@@ -101,8 +101,8 @@ int lua_csprite_get_from_file(lua_State *L) {
   std::wstring shader;
   if (std::filesystem::exists(path)) {
     std::wifstream f(path);
-//      f.imbue(
-//        std::locale(std::locale::empty(), new std::codecvt_utf8<wchar_t>));
+      f.imbue(
+        std::locale(std::locale::classic(), new std::codecvt_utf8<wchar_t>));
       std::wstringstream data_stream;
       data_stream << f.rdbuf();
       data = data_stream.str();

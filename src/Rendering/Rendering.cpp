@@ -34,7 +34,7 @@ void Render::render_buffer(Renderer *R) {
 
   // init buffer
   for (int i = 0; i < 100000; i++) {
-    R->render_buffer[i] = '&';
+    R->render_buffer[i] = L'\0';
   }
 
   // R->render_buffer[0] = '#';
@@ -62,7 +62,7 @@ void Render::render_buffer(Renderer *R) {
 
         for (int x = 0; x < s->bounds.x; x++) {
           render_index = y * s->bounds.x + x;
-          if (s->data[render_index]== ' ') {
+          if (s->data[render_index]== L' ') {
             continue;
           }
 
@@ -126,8 +126,8 @@ void Render::render_buffer(Renderer *R) {
         render_buffer_offset++;
       }
     }
-    if (R->render_buffer[i + render_buffer_offset] == '&') {
-      R->render_buffer[i + render_buffer_offset] = '-';
+    if (R->render_buffer[i + render_buffer_offset] == L'\0') {
+      R->render_buffer[i + render_buffer_offset] = L' ';
     }
   }
 }
